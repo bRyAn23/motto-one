@@ -45,7 +45,7 @@ class CreateAuctionRequest extends FormRequest
             'auction_vehicles.*.Gear' => 'nullable|string',
             'auction_vehicles.*.Color' => 'nullable|string',
             'auction_vehicles.*.Km' => 'nullable|integer|min:0',
-            'auction_vehicles.*.CarOwner' => 'nullable|integer|min:1',
+            'auction_vehicles.*.CarOwner' => 'nullable|integer',
             'auction_vehicles.*.Drive' => 'nullable|string',
             'auction_vehicles.*.Register' => 'nullable|string',
             'auction_vehicles.*.Province' => 'nullable|string',
@@ -60,7 +60,7 @@ class CreateAuctionRequest extends FormRequest
             'auction_vehicles.*.vehicle_media' => 'nullable|array',
             'auction_vehicles.*.vehicle_media.*.DocumentDescription' => 'nullable|string',
             'auction_vehicles.*.vehicle_media.*.DocumentTypeID' => 'nullable|integer',
-            'auction_vehicles.*.vehicle_media.*.ImageURL' => 'nullable|url'
+            'auction_vehicles.*.vehicle_media.*.ImageURL' => 'nullable|string'
         ];
     }
 
