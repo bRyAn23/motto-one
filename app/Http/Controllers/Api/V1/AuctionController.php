@@ -108,10 +108,28 @@ class AuctionController extends Controller
     {
         $auctions = Auction::orderBy('AuctionDate', 'desc')->get();
 
+         $vehicleCounts = DB::table('auction_vehicles')
+        ->select('AuctionCode', 'SellingCategory', DB::raw('COUNT(*) as count'))
+        ->whereIn('AuctionCode', $auctions->pluck('AuctionCode'))
+        ->groupBy('AuctionCode', 'SellingCategory')
+        ->get()
+        ->groupBy('AuctionCode');
+
+         // Add vehicle counts to each auction
+        $auctions->each(function($auction) use ($vehicleCounts) {
+            $auctionVehicles = $vehicleCounts->get($auction->AuctionCode, collect());
+
+            $vehiclesByCategory = $auctionVehicles->pluck('count', 'SellingCategory');
+            $totalVehicles = $auctionVehicles->sum('count');
+
+            $auction->vehicle_count_by_category = $vehiclesByCategory;
+            $auction->total_vehicles = $totalVehicles;
+        });
+        log()->info($auctions->toArray());
         return response()->json([
             'success' => true,
             'message' => 'All auctions retrieved successfully',
-            'data' => AuctionResource::collection($auctions),
+            'data' => $auctions,
             'count' => $auctions->count()
         ]);
     }
